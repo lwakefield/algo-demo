@@ -1,7 +1,7 @@
 <template>
-    <a-scene look-controls="enabled: false" vr-mode-ui="enabled: false">
+    <a-scene vr-mode-ui="enabled: false">
         <a-entity :rotation="rotation">
-            <a-camera></a-camera>
+            <a-entity camera look-controls="enabled: false"></a-entity>
         </a-entity>
         <a-sky :src="story.url"></a-sky>
     </a-scene>

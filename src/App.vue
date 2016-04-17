@@ -1,12 +1,20 @@
 <template>
     <div class="app">
-        <input type="text" class="form-control" placeholder="Enter a name to join." v-model="username" @keyup.enter="join">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Enter a name to join." v-model="username" @keyup.enter="join">
+            <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" @click="join">Join!</button>
+            </span>
+        </div>
 
         <br>
 
         <section v-if="authData">
-            <h2 class="text-center">Your view:</h2>
-            <iframe class="viewer" src="/#!/viewer" v-if="authData"></iframe>
+            <header class="viewer-header">
+                <h2>Your view:</h2>
+                <button class="btn btn-primary" @click="fullscreen">fullscreen</button>
+            </header>
+            <iframe class="viewer" src="/#!/viewer" v-if="authData" v-el:view></iframe>
         </section>
 
         <section v-if="!authData">
@@ -50,16 +58,24 @@
                             this.$firebaseRefs.story.child(`/users/${authData.uid}`).onDisconnect().remove();
                         });
                     });
+                },
+                fullscreen() {
+                    let view = this.$els.view;
+                    if (view.requestFullscreen) {
+                        view.requestFullscreen();
+                    } else if (view.webkitRequestFullscreen) {
+                        view.webkitRequestFullscreen();
+                    } else if (view.mozRequestFullScreen) {
+                        view.mozRequestFullScreen();
+                    } else if (view.msRequestFullscreen) {
+                        view.msRequestFullscreen();
+                    }
                 }
             },
             ready() {
-                setInterval(() => {
-                    if (!this.$els.camera) return;
-                    let rotation = this.$els.camera.object3D.rotation;
-                    this.$firebaseRefs.story.child(`users/${this.authData.uid}`).update({
-                        rotation: `${rotation.x} ${rotation.y} ${rotation.z}`
-                    });
-                }, 100);
+                window.onbeforeunload = () => {
+                    if (this.authData) this.$firebaseRefs.story.child(`/users/${authData.uid}`).remove();
+                };
             }
     }
 </script>
@@ -97,6 +113,11 @@
     .viewer {
         width: 100%;
         height: 30rem;
+    }
+    
+    .viewer-header {
+        display: flex;
+        justify-content: space-between;
     }
     
     .watcher-list {
