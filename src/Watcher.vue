@@ -9,7 +9,6 @@
 
 <script>
     import Firebase from 'firebase';
-    require('aframe');
 
     export default {
         firebase: {
@@ -30,6 +29,9 @@
                 z *= 360;
                 return `${x} ${y} ${z}`;
             }
+        },
+        created() {
+            require('aframe');
         },
         ready() {
             this.$bindAsObject('user', this.$firebaseRefs.story.child(`/users/${this.$route.params.uid}`));

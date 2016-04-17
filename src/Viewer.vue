@@ -3,11 +3,11 @@
         <a-camera v-el:camera></a-camera>
         <a-sky :src="story.url"></a-sky>
     </a-scene>
+    <script src="https://aframe.io/releases/0.2.0/aframe.min.js"></script>
 </template>
 
 <script>
     import Firebase from 'firebase';
-    require('aframe');
 
     export default {
         firebase: {
@@ -20,6 +20,9 @@
             auth() {
                 return this.$firebaseRefs.story.getAuth();
             }
+        },
+        created() {
+            require('aframe');
         },
         ready() {
             setInterval(() => {
